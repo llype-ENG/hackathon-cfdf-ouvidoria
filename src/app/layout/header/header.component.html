@@ -1,0 +1,87 @@
+<header class="gov-header" role="banner" [class.menu-open]="isOpen()">
+    <!-- Faixa superior -->
+    <div class="topbar">
+      <!-- Logos esquerda -->
+      <div class="left-block" aria-label="Logos institucionais">
+        <ng-container *ngFor="let logo of logos">
+          <a *ngIf="logo.href; else onlyImg"
+             class="mini-logo"
+             [href]="logo.href"
+             rel="noopener"
+             [attr.aria-label]="logo.alt">
+            <img [src]="logo.src" [alt]="logo.alt" [style.height.px]="logo.height || 40" />
+          </a>
+          <ng-template #onlyImg>
+            <span class="mini-logo" [attr.aria-label]="logo.alt">
+              <img [src]="logo.src" [alt]="logo.alt" [style.height.px]="logo.height || 40" />
+            </span>
+          </ng-template>
+        </ng-container>
+      </div>
+  
+      <!-- Marca central -->
+      <a class="brand"
+         [routerLink]="brandRouterLink"
+         [href]="brandHrefString"
+         aria-label="Página inicial">
+        <!-- Ícone azul esquerdo -->
+        <svg class="brand-icon" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3AA0FF"/>
+              <stop offset="100%" stop-color="#1E63B6"/>
+            </linearGradient>
+          </defs>
+          <path d="M9 3 L5 7 L10 12 L5 17 L9 21 L16 14 L16 10 Z" fill="url(#grad)" />
+        </svg>
+  
+        <span class="brand-text">
+          <span class="brand-strong">{{ brandStrong }}</span><span class="brand-df">{{ brandSuffix }}</span>
+        </span>
+  
+        <!-- Ícone azul direito (chevron) -->
+        <svg class="brand-icon right" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 4 L7.6 5.4 12.2 10 7.6 14.6 9 16 15 10z" fill="url(#grad)"/>
+        </svg>
+      </a>
+  
+      <!-- Ações à direita -->
+      <nav class="actions" aria-label="Ações">
+        <a class="sign-in"
+           [routerLink]="signInRouterLink"
+           [href]="signInHrefString"
+           (click)="onSignInClick($event)">
+          <span class="icon" aria-hidden="true">🔐</span>
+          {{ signInLabel }}
+        </a>
+      </nav>
+  
+      <!-- Botão menu (mobile) -->
+      <button class="nav-toggle"
+              type="button"
+              (click)="toggleMenu()"
+              [attr.aria-expanded]="isOpen()"
+              [attr.aria-controls]="'mainnav'"
+              [attr.aria-label]="isOpen() ? 'Fechar menu' : 'Abrir menu'">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+    </div>
+  
+    <!-- Faixa de navegação inferior -->
+    <div class="nav-strip">
+      <nav id="mainnav" class="main-nav" aria-label="Navegação principal">
+        <ng-container *ngFor="let link of links; let last = last">
+          <a class="nav-link"
+             [class.is-active]="link.active"
+             [routerLink]="link.routerLink || null"
+             [href]="link.href || null"
+             [attr.target]="link.target || null"
+             [attr.rel]="link.rel || (link.target === '_blank' ? 'noopener noreferrer' : null)"
+             (click)="closeMenu()">
+            {{ link.label }}
+          </a>
+          <span class="divider" aria-hidden="true" *ngIf="!last"></span>
+        </ng-container>
+      </nav>
+    </div>
+  </header>
