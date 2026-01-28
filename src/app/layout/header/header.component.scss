@@ -24,7 +24,7 @@
     /* ---------- Topbar ---------- */
     .topbar {
       background: var(--blue-900);
-      min-height: 64px;
+      min-height: 100px;
       padding: 8px 16px;
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -137,17 +137,20 @@
     .nav-strip {
       background: var(--blue-700);
       border-bottom: 1px solid rgba(255,255,255,0.35);
+      display: flex;
+      justify-content: center;
+      align-items: center;
   
       .main-nav {
         display: flex;
         align-items: center;
-        gap: 0;
+        gap: 7px;
         padding: 0 16px;
-        min-height: 44px;
+        min-height: 33px;
         overflow-x: auto;
   
         .nav-link {
-          padding: 12px 20px;
+          padding: 8px 20px;
           font-weight: 600;
           color: var(--white);
           opacity: .95;

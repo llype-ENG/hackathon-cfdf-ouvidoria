@@ -16,6 +16,8 @@ import { MatTooltipModule }     from '@angular/material/tooltip';
 import { MatSnackBarModule }    from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatStepperModule
+    MatStepperModule,
+    MatDividerModule,
+    MatCardModule
   
   ]
 })

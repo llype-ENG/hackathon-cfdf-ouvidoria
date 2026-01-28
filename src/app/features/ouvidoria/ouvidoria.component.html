@@ -1,58 +1,148 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+<!-- ouvidoria.component.html -->
+<div class="page-center">
+  <mat-card class="ouvidoria-card mat-elevation-z4" id="mat-card">
+    <mat-card-title>Ouvidoria</mat-card-title>
+    <mat-card-subtitle>Preencha as etapas abaixo</mat-card-subtitle>
 
-    <mat-slide-toggle formControlName="anonimo">Enviar anonimamente</mat-slide-toggle>
-  
-    <div *ngIf="!form.value.anonimo">
-      <mat-form-field>
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="nome">
-      </mat-form-field>
-    </div>
-  
-    <mat-form-field>
-      <mat-label>Assunto</mat-label>
-      <input matInput formControlName="assunto">
-    </mat-form-field>
-  
-    <mat-form-field>
-      <mat-label>Descrição</mat-label>
-      <textarea matInput formControlName="descricao" rows="6"></textarea>
-    </mat-form-field>
-    
- 
-    <!-- ÁUDIO -->
-    <button mat-raised-button color="accent" type="button" (click)="gravarAudio()">
-      🎤 Gravar Áudio
-    </button>
-    <button mat-stroked-button type="button" (click)="pararAudio()" *ngIf="gravando">
-      ⏹ Parar Gravação
-    </button>
-  
-    <p *ngIf="audioBlob">Áudio gravado!</p>
-  
-    <!-- FOTO -->
-    <input type="file" accept="image/*" (change)="selecionarFoto($event)">
-  
-    <p *ngIf="fotoFile">Foto selecionada!</p>
-  
-    <!-- VÍDEO -->
-    <input type="file" accept="video/*" (change)="selecionarVideo($event)">
-  
-    <p *ngIf="videoFile">Vídeo selecionado!</p>
-  
-    <button mat-raised-button color="primary" type="submit">
-      Enviar
-    </button>
-  
-  </form>
+    <mat-card-content>
+      <!-- >>> Casulo com tamanho fixo para o stepper <<< -->
+      <div class="stepper-shell">
+        <mat-horizontal-stepper class="ouvidoria-stepper" linear #stepper>
 
-  <mat-horizontal-stepper linear #stepper>
-    <mat-step [stepControl]="firstFormGroup">
-      <form [formGroup]="firstFormGroup">
-        <ng-template matStepLabel>Fill out your name</ng-template>
-        <!-- Step Content -->
-        <button mat-button matStepperNext>Next</button>
-      </form>
-    </mat-step>
-    <!-- Additional Steps -->
-</mat-horizontal-stepper> 
+          <!-- STEP 1 -->
+          <mat-step [stepControl]="identificacaoForm">
+            <form [formGroup]="identificacaoForm">
+              <ng-template matStepLabel>Relato</ng-template>
+
+             
+
+              <div *ngIf="!identificacaoForm.value.anonimo" class="mt-2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Escreva seu Relato</mat-label>
+                  <input matInput formControlName="nome" />
+                  <mat-error *ngIf="identificacaoForm.get('nome')?.hasError('required')">
+                    Informe seu nome ou marque como anônimo.
+                  </mat-error>
+                  <mat-error *ngIf="identificacaoForm.get('nome')?.hasError('minlength')">
+                    Nome deve ter ao menos 3 caracteres.
+                  </mat-error>
+                  
+                </mat-form-field>
+              </div>
+            
+              <div class="step-actions">
+                <button mat-raised-button color="primary" matStepperNext
+                        [disabled]="identificacaoForm.invalid">
+                  Próximo
+                </button>
+              </div>
+            </form>
+            <mat-slide-toggle formControlName="anonimo">
+              Enviar anonimamente
+            </mat-slide-toggle>
+          </mat-step>
+
+          <!-- STEP 2 -->
+          <mat-step [stepControl]="detalhesForm">
+            <form [formGroup]="detalhesForm">
+              <ng-template matStepLabel>Detalhes</ng-template>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Assunto</mat-label>
+                <input matInput formControlName="assunto" />
+                <mat-error *ngIf="detalhesForm.get('assunto')?.hasError('required')">
+                  Assunto é obrigatório.
+                </mat-error>
+                <mat-error *ngIf="detalhesForm.get('assunto')?.hasError('minlength')">
+                  Assunto deve ter ao menos 3 caracteres.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput formControlName="descricao" rows="5"></textarea>
+                <mat-error *ngIf="detalhesForm.get('descricao')?.hasError('required')">
+                  Descrição é obrigatória.
+                </mat-error>
+                <mat-error *ngIf="detalhesForm.get('descricao')?.hasError('minlength')">
+                  Descrição deve ter ao menos 5 caracteres.
+                </mat-error>
+              </mat-form-field>
+
+              <div class="step-actions">
+                <button mat-stroked-button matStepperPrevious>Voltar</button>
+                <button mat-raised-button color="primary" matStepperNext
+                        [disabled]="detalhesForm.invalid">Próximo</button>
+              </div>
+            </form>
+          </mat-step>
+
+          <!-- STEP 3 -->
+          <mat-step [stepControl]="anexosForm">
+            <form [formGroup]="anexosForm">
+              <ng-template matStepLabel>Anexos</ng-template>
+
+              <div class="mb-2">
+                <button mat-raised-button color="accent" type="button"
+                        (click)="gravarAudio()" [disabled]="gravando">
+                  <mat-icon>mic</mat-icon> Gravar Áudio
+                </button>
+                <button mat-stroked-button type="button" (click)="pararAudio()"
+                        *ngIf="gravando">
+                  <mat-icon>stop</mat-icon> Parar Gravação
+                </button>
+                <p class="hint" *ngIf="audioBlob">Áudio gravado!</p>
+              </div>
+
+              <div class="mb-2">
+                <label class="input-label">Foto (opcional)</label>
+                <input type="file" accept="image/*" (change)="selecionarFoto($event)" />
+                <p class="hint" *ngIf="fotoFile">Foto: {{ fotoFile?.name }}</p>
+              </div>
+
+              <div class="mb-2">
+                <label class="input-label">Vídeo (opcional)</label>
+                <input type="file" accept="video/*" (change)="selecionarVideo($event)" />
+                <p class="hint" *ngIf="videoFile">Vídeo: {{ videoFile?.name }}</p>
+              </div>
+
+              <div class="step-actions">
+                <button mat-stroked-button matStepperPrevious>Voltar</button>
+                <button mat-raised-button color="primary" matStepperNext>Próximo</button>
+              </div>
+            </form>
+          </mat-step>
+
+          <!-- STEP 4 -->
+          <mat-step>
+            <ng-template matStepLabel>Revisão</ng-template>
+
+            <h3>Revise os dados</h3>
+            <mat-divider class="my-2"></mat-divider>
+
+            <div class="review">
+              <p><strong>Envio anônimo:</strong> {{ identificacaoForm.value.anonimo ? 'Sim' : 'Não' }}</p>
+              <p *ngIf="!identificacaoForm.value.anonimo">
+                <strong>Nome:</strong> {{ identificacaoForm.value.nome }}
+              </p>
+              <p><strong>Assunto:</strong> {{ detalhesForm.value.assunto }}</p>
+              <p><strong>Descrição:</strong> {{ detalhesForm.value.descricao }}</p>
+              <p><strong>Áudio:</strong> {{ audioBlob ? 'Gravado' : 'Nenhum' }}</p>
+              <p><strong>Foto:</strong> {{ fotoFile?.name || 'Nenhuma' }}</p>
+              <p><strong>Vídeo:</strong> {{ videoFile?.name || 'Nenhum' }}</p>
+            </div>
+
+            <div class="step-actions">
+              <button mat-stroked-button matStepperPrevious>Voltar</button>
+              <button mat-raised-button color="primary" (click)="enviar(stepper)">
+                Enviar
+              </button>
+            </div>
+          </mat-step>
+
+        </mat-horizontal-stepper>
+      </div>
+      <!-- /stepper-shell -->
+    </mat-card-content>
+  </mat-card>
+</div>
